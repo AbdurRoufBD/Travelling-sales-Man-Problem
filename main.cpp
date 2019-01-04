@@ -15,6 +15,7 @@ class Cities
 private:
     City * cities;
     int n;
+    double ** allDistances;
 public:
     Cities()
     {
@@ -24,8 +25,14 @@ public:
     {
         this->n = num;
         cities = new City[n];
+
+        allDistances = new double* [this->n];
+        for(int i = 0; i < this->n; i++)
+        {
+            allDistances[i] = new double [this->n];
+        }
     }
-    void SetCitiesCordinate()
+    void SetCitiesCordinateAndCalculateAllDistance()
     {
         for(int i = 0; i < this->n; i++)
         {
@@ -38,6 +45,20 @@ public:
             cin>>temp;
             cities[i].y = temp;
 
+        }
+
+        for(int i = 0; i < this->n; i++)
+        {
+            for(int j = 0; j < this->n; j++)
+            {
+                if(i == j)
+                {
+                    allDistances[i][j] = 0;
+                    continue;
+                }
+                allDistances[i][j] = this->CalculateDistance(i,j);
+
+            }
         }
     }
     void ShowAllCities()
@@ -56,13 +77,26 @@ public:
             cout<<"Invalid City no\n";
             return -1;
         }
-       int i = city1-1;
-       int j = city2-1;
+        int i = city1;
+        int j = city2;
 
-       double distance;
-       distance = pow((cities[i].x - cities[j].x),2)+pow((cities[i].y - cities[j].y),2);
-       distance = sqrt(distance);
-       return distance;
+        double distance;
+        distance = pow((cities[i].x - cities[j].x),2)+pow((cities[i].y - cities[j].y),2);
+        distance = sqrt(distance);
+        return distance;
+    }
+
+    void PrintAllDistance()
+    {
+        for(int i = 0; i < this->n; i++)
+        {
+            cout<<"Distance from ("<<cities[i].x<<","<<cities[i].y<<") to \n\n";
+            for(int j = 0; j < this->n; j++)
+            {
+                cout<<"\t\t("<<cities[j].x<<","<<cities[j].y<<") is :: "<<allDistances[i][j]<<endl;
+            }
+            cout<<endl<<endl;
+        }
     }
 
 
@@ -74,15 +108,8 @@ int main()
     cout<<"Enter the number of cities : ";
     cin>>n;
     Cities cities(n);
-    cities.SetCitiesCordinate();
+    cities.SetCitiesCordinateAndCalculateAllDistance();
     cities.ShowAllCities();
-
-    //Calculate distance
-    int city1;
-    int city2;
-
-    cin>>city1>>city2;
-
-    cout<<"Distance : "<<cities.CalculateDistance(city1,city2)<<endl;
+    cities.PrintAllDistance();
 
 }
